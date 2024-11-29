@@ -1,30 +1,44 @@
 ﻿using LanguageCourse.Domain.Context.ClassAggregate.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using LanguageCourse.Domain.Context.EnrollmentAggregate.Entities;
+using LanguageCourse.Domain.Context.StudentAggregate.Entities;
+using LanguageCourse.Domain.Repositories;
 
 namespace LanguageCourse.Domain.Context.ClassAggregate.Services
 {
     public class ClassService : IClassService
     {
-        public Task<Class> GetClassById(Guid id)
+        private readonly IRepository _repository;
+        public async Task<Class> GetClassById(Guid id)
         {
-            throw new NotImplementedException();
+            var classStudent = _repository.Query<Class>().FirstOrDefault(c => c.Id == id);
+            return classStudent;
         }
 
-        public Task<List<Class>> GetAllSClassies()
+        public async Task<List<Class>> GetAllSClassies()
         {
-            throw new NotImplementedException();
+            var classStudent = _repository.Query<Class>().ToList();
+
+            return classStudent;
         }
 
-        public Task<Class> CreateClass()
+        public async Task<Class> CreateClass(string name)
         {
-            throw new NotImplementedException();
+            Class classStudent = new Class(name);
+            await _repository.InsertAsync(classStudent);
+            await _repository.SaveChangeAsync();
+
+            return classStudent;
         }
 
-        public Task DeletClass(Guid id)
+        public async Task DeletClass(Guid id)
         {
-            throw new NotImplementedException();
+            var classStudent = _repository.Query<Student>().FirstOrDefault(s => s.Id == id);
+
+            if (classStudent is not null)
+            {
+                _repository.Delete(classStudent);
+                await _repository.SaveChangeAsync();
+            }
         }
     }
 }

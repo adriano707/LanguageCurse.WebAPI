@@ -1,7 +1,7 @@
-﻿using LanguageCourse.Domain.Context.ClassAggregate.Entities;
-using LanguageCourse.Domain.Context.StudentAggregate.Entities;
+﻿using LanguageCourse.Domain.Context.StudentAggregate.Entities;
 using LanguageCourse.Domain.Context.StudentAggregate.Enums;
 using LanguageCourse.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace LanguageCourse.Domain.Context.StudentAggregate.Services
 {
@@ -20,9 +20,14 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Services
             return students;
         }
 
-        public async Task<Student> CreateStudent(string name, GenreEnum genre, string cpf, string email, IReadOnlyCollection<Class> classes)
+        public async Task<Student> CreateStudent(string name, GenreEnum genre, string cpf, string email)
         {
-            Student student = new Student(name, genre, cpf, email, classes);
+            Student student = new Student(name, genre, cpf, email);
+
+            bool cpfExists = await _repository.Query<Student>().AnyAsync(s => s.CPF == cpf);
+
+            if (cpfExists)
+                throw new InvalidOperationException("There is already a student with the provided CPF.");
 
             await _repository.InsertAsync(student);
             await _repository.SaveChangeAsync();

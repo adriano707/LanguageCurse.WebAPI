@@ -1,10 +1,5 @@
-﻿using LanguageCourse.Domain.Context.StudentAggregate.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LanguageCourse.Domain.Context.ClassAggregate.Entities;
+﻿using LanguageCourse.Domain.Context.ClassAggregate.Entities;
+using LanguageCourse.Domain.Context.EnrollmentAggregate.Entities;
 
 namespace LanguageCourse.Domain.Context.ClassAggregate.Services
 {
@@ -12,7 +7,7 @@ namespace LanguageCourse.Domain.Context.ClassAggregate.Services
     {
         Task<Class> GetClassById(Guid id);
         Task<List<Class>> GetAllSClassies();
-        Task<Class> CreateClass();
+        Task<Class> CreateClass(string name);
         Task DeletClass(Guid id);
     }
 }
