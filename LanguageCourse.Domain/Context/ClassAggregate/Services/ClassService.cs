@@ -1,7 +1,6 @@
 ﻿using LanguageCourse.Domain.Context.ClassAggregate.Entities;
-using LanguageCourse.Domain.Context.EnrollmentAggregate.Entities;
-using LanguageCourse.Domain.Context.StudentAggregate.Entities;
 using LanguageCourse.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace LanguageCourse.Domain.Context.ClassAggregate.Services
 {
@@ -24,21 +23,42 @@ namespace LanguageCourse.Domain.Context.ClassAggregate.Services
         public async Task<Class> CreateClass(string name)
         {
             Class classStudent = new Class(name);
+
             await _repository.InsertAsync(classStudent);
             await _repository.SaveChangeAsync();
 
             return classStudent;
         }
 
-        public async Task DeletClass(Guid id)
+        public async Task<Class> UpdateClass(Guid id, string number)
         {
-            var classStudent = _repository.Query<Student>().FirstOrDefault(s => s.Id == id);
+            var classe = _repository.Query<Class>().FirstOrDefault(c => c.Id == id);
 
-            if (classStudent is not null)
+            if (classe is not null)
             {
-                _repository.Delete(classStudent);
-                await _repository.SaveChangeAsync();
+                classe.UpdateClass(number);
             }
+
+            _repository.Update(classe);
+            await _repository.SaveChangeAsync();
+
+            return classe;
+        }
+
+        public async Task DeleteClass(Guid id)
+        {
+            var classStudent = await _repository.Query<Class>()
+                .Include(c => c.Enrollments)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (classStudent is null)
+                throw new InvalidOperationException("Class not found.");
+
+            if (classStudent.Enrollments.Any())
+                throw new InvalidOperationException("Class cannot be deleted as it has students enrolled.");
+
+            _repository.Delete(classStudent);
+            await _repository.SaveChangeAsync();
         }
     }
 }

@@ -1,30 +1,52 @@
 ﻿using LanguageCourse.Domain.Context.EnrollmentAggregate.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using LanguageCourse.Domain.Repositories;
 
 namespace LanguageCourse.Domain.Context.EnrollmentAggregate.Services
 {
     public class EnrollmentService : IEnrollmentService
     {
-        public Task<Enrollment> GetEnrollmentById(Guid id)
+        private readonly IRepository _repository;
+
+        public EnrollmentService(IRepository repository)
         {
-            throw new NotImplementedException();
+            _repository = repository;
+        }
+        public async Task<Enrollment> GetEnrollmentById(Guid id)
+        {
+            var enrollmet = _repository.Query<Enrollment>().FirstOrDefault(e => e.Id == id);
+            return enrollmet;
         }
 
-        public Task<List<Enrollment>> GetAllEnrollments()
+        public async Task<List<Enrollment>> GetAllEnrollments()
         {
-            throw new NotImplementedException();
+            var enrollmet = _repository.Query<Enrollment>().ToList();
+            return enrollmet;
         }
 
-        public Task<Enrollment> CreateEnrollment()
+        public async Task<Enrollment> UpdateEnrollment(Guid id, string number)
         {
-            throw new NotImplementedException();
+            var enrollment = _repository.Query<Enrollment>().FirstOrDefault(e => e.Id == id);
+
+            if (enrollment is not null)
+            {
+                enrollment.UpdateEnrollment(number);
+            }
+
+            _repository.Update(enrollment);
+            await _repository.SaveChangeAsync();
+
+            return enrollment;
         }
 
-        public Task DeletEnrollment(Guid id)
+        public async Task DeletEnrollment(Guid id)
         {
-            throw new NotImplementedException();
+            var student = _repository.Query<Enrollment>().FirstOrDefault(s => s.Id == id);
+
+            if (student is not null)
+            {
+                _repository.Delete(student);
+                await _repository.SaveChangeAsync();
+            }
         }
     }
 }

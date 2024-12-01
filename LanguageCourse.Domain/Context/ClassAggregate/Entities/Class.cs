@@ -17,5 +17,10 @@ namespace LanguageCourse.Domain.Context.ClassAggregate.Entities
             Name = name ?? throw new ArgumentNullException(nameof(name));
             _enrollment = new List<Enrollment>();
         }
+
+        public void UpdateClass(string name)
+        {
+            Name = name;
+        }
     }
 }

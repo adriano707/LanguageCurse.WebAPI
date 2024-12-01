@@ -36,7 +36,7 @@ public static class SwaggerConfiguration
                         //describe the info
                         var info = new OpenApiInfo
                         {
-                            Title = $"{{service-name}} {description.GroupName}",
+                            Title = $"{{language-course}} {description.GroupName}",
                             Version = version.ToString(),
                             Description = apiInfoDescription.ToString(),
                             License = new OpenApiLicense() { Name = $"App Version: {version.Major}.{version.Minor}.{version.Build}" }

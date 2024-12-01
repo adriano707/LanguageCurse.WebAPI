@@ -1,7 +1,6 @@
-using LanguageCourse.Data;
-using Person.Domain.Repositories;
+using LanguageCourse.Domain.Repositories;
 
-namespace Person.Data.Repository
+namespace LanguageCourse.Data.Repositories
 {
     public class Repository : IRepository
     {

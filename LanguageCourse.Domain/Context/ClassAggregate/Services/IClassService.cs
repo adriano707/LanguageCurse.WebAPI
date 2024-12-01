@@ -1,5 +1,4 @@
 ﻿using LanguageCourse.Domain.Context.ClassAggregate.Entities;
-using LanguageCourse.Domain.Context.EnrollmentAggregate.Entities;
 
 namespace LanguageCourse.Domain.Context.ClassAggregate.Services
 {
@@ -8,6 +7,7 @@ namespace LanguageCourse.Domain.Context.ClassAggregate.Services
         Task<Class> GetClassById(Guid id);
         Task<List<Class>> GetAllSClassies();
         Task<Class> CreateClass(string name);
-        Task DeletClass(Guid id);
+        Task<Class> UpdateClass(Guid id, string name);
+        Task DeleteClass(Guid id);
     }
 }

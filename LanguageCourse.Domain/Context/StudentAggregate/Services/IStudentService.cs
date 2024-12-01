@@ -7,7 +7,8 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Services
     {
         Task<Student> GetStudentById(Guid id);
         Task<List<Student>> GetAllStudents();
-        Task<Student> CreateStudent(string name, GenreEnum genre, string cpf, string email);
+        Task<Student> CreateStudent(string name, GenreEnum genre, string cpf, string email, List<Guid> classIds);
+        Task<Student> UpdateStudent(Guid id, string name, GenreEnum genre, string cpf, string email);
         Task DeletStudent(Guid id);
     }
 }

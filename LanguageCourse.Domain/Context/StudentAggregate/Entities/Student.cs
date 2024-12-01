@@ -14,6 +14,11 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Entities
         public string Email { get; private set; }
         public IReadOnlyCollection<Enrollment> Enrollments => _enrollment;
 
+        public Student()
+        {
+            
+        }
+
 
         public Student(string name, GenreEnum genre, string cpf, string email)
         {
@@ -23,6 +28,24 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Entities
             CPF = cpf ?? throw new ArgumentNullException(nameof(cpf));
             Email = email ?? throw new ArgumentNullException(nameof(email));
             _enrollment = new List<Enrollment>();
+        }
+
+        public void UpdateStudent(string name, GenreEnum genre, string cpf, string email)
+        {
+            Name = name;
+            Genre = genre;
+            CPF = cpf;
+            Email = email;
+        }
+
+        public void AddEnrollment(Enrollment enrollment)
+        {
+            if (enrollment == null)
+            {
+                _enrollment = new List<Enrollment>();  
+            }
+            
+            _enrollment.Add(enrollment);  
         }
     }
 }

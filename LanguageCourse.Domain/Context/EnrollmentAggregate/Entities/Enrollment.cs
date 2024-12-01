@@ -12,12 +12,17 @@ namespace LanguageCourse.Domain.Context.EnrollmentAggregate.Entities
         public Class Class { get; private set; }
         public Guid ClassId { get; private set; }
 
-        public Enrollment(string number, Guid studentId, Guid classId)
+        public Enrollment(Guid classId)
         {
             Id = Guid.NewGuid();
-            Number = number ?? throw new ArgumentNullException(nameof(number));
-            StudentId = studentId;
             ClassId = classId;
         }
+
+        public void UpdateEnrollment(string number)
+        {
+            Number = number;
+        }
+
+       
     }
 }

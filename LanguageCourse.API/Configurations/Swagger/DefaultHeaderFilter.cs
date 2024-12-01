@@ -15,12 +15,5 @@ public class DefaultHeaderFilter : IOperationFilter
             Required = false,
             Example = new OpenApiString("pt-BR")
         });
-        
-        operation.Parameters.Add(new OpenApiParameter
-        {
-            Name = "X-TenantId",
-            In = ParameterLocation.Header,
-            Required = true
-        });
     }
 }
