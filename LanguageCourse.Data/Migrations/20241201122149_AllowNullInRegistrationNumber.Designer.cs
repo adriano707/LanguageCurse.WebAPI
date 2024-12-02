@@ -4,6 +4,7 @@ using LanguageCourse.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LanguageCourse.Data.Migrations
 {
     [DbContext(typeof(LanguageCourseContext))]
-    partial class LanguageCourseContextModelSnapshot : ModelSnapshot
+    [Migration("20241201122149_AllowNullInRegistrationNumber")]
+    partial class AllowNullInRegistrationNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,10 +30,6 @@ namespace LanguageCourse.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -49,6 +48,9 @@ namespace LanguageCourse.Data.Migrations
 
                     b.Property<Guid>("ClassId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Number")
+                        .HasColumnType("varchar(250)");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");

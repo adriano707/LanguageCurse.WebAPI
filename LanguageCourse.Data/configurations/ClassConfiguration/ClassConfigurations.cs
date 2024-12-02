@@ -10,11 +10,11 @@ namespace LanguageCourse.Data.Configurations.ClassConfiguration
         {
             builder.HasKey(s => s.Id);
             builder.Property(s => s.Name).HasColumnType("varchar(250)");
+            builder.Property(s => s.Description).HasColumnType("varchar(250)");
 
             builder.HasMany(c => c.Enrollments)  
                 .WithOne(e => e.Class)  
-                .HasForeignKey(e => e.ClassId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(e => e.ClassId);
         }
     }
 }

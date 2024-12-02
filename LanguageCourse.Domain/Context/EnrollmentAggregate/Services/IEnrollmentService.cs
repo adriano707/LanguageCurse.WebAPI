@@ -6,7 +6,6 @@ namespace LanguageCourse.Domain.Context.EnrollmentAggregate.Services
     {
         Task<Enrollment> GetEnrollmentById(Guid id);
         Task<List<Enrollment>> GetAllEnrollments();
-        Task<Enrollment> UpdateEnrollment(Guid id, string number);
         Task DeletEnrollment(Guid id);
     }
 }

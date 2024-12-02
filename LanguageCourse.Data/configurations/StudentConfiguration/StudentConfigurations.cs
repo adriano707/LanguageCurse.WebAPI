@@ -16,8 +16,7 @@ namespace LanguageCourse.Data.Configurations.StudentConfiguration
 
             builder.HasMany(s => s.Enrollments)  
                 .WithOne(e => e.Student)     
-                .HasForeignKey(e => e.StudentId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(e => e.StudentId);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using LanguageCourse.Domain.Context.ClassAggregate.Entities;
-using LanguageCourse.Domain.Context.ClassAggregate.Exceptions;
+﻿using LanguageCourse.Domain.Context.ClassAggregate.Exceptions;
 using LanguageCourse.Domain.Context.EnrollmentAggregate.Entities;
 using LanguageCourse.Domain.Context.StudentAggregate.Entities;
 using LanguageCourse.Domain.Context.StudentAggregate.Enums;
@@ -12,6 +11,11 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Services
     public class StudentService : IStudentService
     {
         private readonly IRepository _repository;
+
+        public StudentService(IRepository repository)
+        {
+            _repository = repository;
+        }
         public async Task<Student> GetStudentById(Guid id)
         {
             var student = _repository.Query<Student>().FirstOrDefault(s => s.Id == id);
@@ -33,10 +37,9 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Services
 
             foreach (var idClass in classIds)
             {
-                await CheckNumberOfEnrollmentsByClass(idClass);
+                await CheckIfTheNumberOfStudentsPerClassHasBeenExceededAndCheckIfTheStudentIsAlreadyEnrolledInTheClass(student.Id, idClass);
 
                 Enrollment enrollment = new Enrollment(idClass);
-
                 student.AddEnrollment(enrollment);
             }
 
@@ -46,12 +49,37 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Services
             return student;
         }
 
+
+        private async Task CheckIfTheNumberOfStudentsPerClassHasBeenExceededAndCheckIfTheStudentIsAlreadyEnrolledInTheClass(Guid studentId, Guid classId)
+        {
+            await CheckNumberOfEnrollmentsByClass(classId);
+
+            if (await IsStudentAlreadyEnrolledInClass(studentId, classId))
+                throw new DuplicateEnrollmentException();
+        }
+
+        private async Task<bool> IsStudentAlreadyEnrolledInClass(Guid studentId, Guid classId)
+        {
+            return await _repository.Query<Enrollment>()
+                .AnyAsync(e => e.StudentId == studentId && e.ClassId == classId);
+        }
+
         private async Task CheckNumberOfEnrollmentsByClass(Guid idClass)
         {
-            var numbeOfEnrollmentsPerCass = await _repository.Query<Class>()
-                .Include(c => c.Enrollments).CountAsync(c => c.Id == idClass);
+            var numbeOfEnrollmentsPerCass = await _repository.Query<Enrollment>()
+                .CountAsync(c => c.ClassId == idClass);
 
             if (numbeOfEnrollmentsPerCass >= 5) throw new MaximumNumberOfStudentsPerClassExceededException();
+        }
+
+        public async Task AddEnrollmentToStudent(Guid studentId, Guid classId)
+        {
+            await CheckIfTheNumberOfStudentsPerClassHasBeenExceededAndCheckIfTheStudentIsAlreadyEnrolledInTheClass(studentId, classId);
+
+            Enrollment enrollment = new Enrollment(studentId, classId);
+
+            await _repository.InsertAsync(enrollment);
+            await _repository.SaveChangeAsync();
         }
 
         public async Task<Student> UpdateStudent(Guid id, string name, GenreEnum genre, string cpf, string email)

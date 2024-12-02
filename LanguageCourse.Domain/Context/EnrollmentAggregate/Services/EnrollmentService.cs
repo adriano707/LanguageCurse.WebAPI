@@ -23,21 +23,6 @@ namespace LanguageCourse.Domain.Context.EnrollmentAggregate.Services
             return enrollmet;
         }
 
-        public async Task<Enrollment> UpdateEnrollment(Guid id, string number)
-        {
-            var enrollment = _repository.Query<Enrollment>().FirstOrDefault(e => e.Id == id);
-
-            if (enrollment is not null)
-            {
-                enrollment.UpdateEnrollment(number);
-            }
-
-            _repository.Update(enrollment);
-            await _repository.SaveChangeAsync();
-
-            return enrollment;
-        }
-
         public async Task DeletEnrollment(Guid id)
         {
             var student = _repository.Query<Enrollment>().FirstOrDefault(s => s.Id == id);

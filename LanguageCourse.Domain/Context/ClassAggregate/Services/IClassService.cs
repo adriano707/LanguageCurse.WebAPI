@@ -4,10 +4,10 @@ namespace LanguageCourse.Domain.Context.ClassAggregate.Services
 {
     public interface IClassService
     {
-        Task<Class> GetClassById(Guid id);
-        Task<List<Class>> GetAllSClassies();
-        Task<Class> CreateClass(string name);
-        Task<Class> UpdateClass(Guid id, string name);
-        Task DeleteClass(Guid id);
+        Task<Class> GetClassByIdAsync(Guid id);
+        Task<List<Class>> GetAllSClassesAsync();
+        Task<Class> CreateClassAsync(string name, string description);
+        Task<Class> UpdateClassAsync(Guid id, string name, string description);
+        Task DeleteClassAsync(Guid id);
     }
 }

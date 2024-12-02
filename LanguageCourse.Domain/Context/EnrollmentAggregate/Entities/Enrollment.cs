@@ -5,8 +5,7 @@ namespace LanguageCourse.Domain.Context.EnrollmentAggregate.Entities
 {
     public class Enrollment
     {
-        public Guid Id { get; private set; }
-        public string Number { get; private set; }
+        public Guid Id { get; set; }
         public Student Student { get; private set; }
         public Guid StudentId { get; private set; }
         public Class Class { get; private set; }
@@ -18,11 +17,10 @@ namespace LanguageCourse.Domain.Context.EnrollmentAggregate.Entities
             ClassId = classId;
         }
 
-        public void UpdateEnrollment(string number)
+        public Enrollment(Guid studentId, Guid classId)
         {
-            Number = number;
+            StudentId = studentId;
+            ClassId = classId;
         }
-
-       
     }
 }

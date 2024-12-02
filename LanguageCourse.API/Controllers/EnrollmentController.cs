@@ -6,7 +6,7 @@ namespace LanguageCourse.API.Controllers
 {
     [ApiController]
     [ApiVersion("1")]
-    [Route("enrollments")]
+    [Route("api/v{v:apiVersion}/enrollments")]
     public class EnrollmentController : ControllerBase
     {
         private readonly IEnrollmentService _service;
@@ -19,22 +19,15 @@ namespace LanguageCourse.API.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetEnrollmentById([FromRoute] Guid id)
         {
-            var enrollment = _service.GetEnrollmentById(id);
+            var enrollment = await _service.GetEnrollmentById(id);
             return Ok(enrollment);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllEnrollments()
         {
-            var enrollments = _service.GetAllEnrollments();
+            var enrollments = await _service.GetAllEnrollments();
             return Ok(enrollments);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateEnrollment(EnrollmentEditDTO dto)
-        {
-            var enrollment = await _service.UpdateEnrollment(dto.Id, dto.Number);
-            return Ok(enrollment);
         }
 
         [HttpDelete("{id:guid}")]
