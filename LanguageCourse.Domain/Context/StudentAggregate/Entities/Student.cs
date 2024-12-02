@@ -22,7 +22,6 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Entities
             
         }
 
-
         public Student(string name, GenreEnum genre, string cpf, string email)
         {
             Id = Guid.NewGuid();

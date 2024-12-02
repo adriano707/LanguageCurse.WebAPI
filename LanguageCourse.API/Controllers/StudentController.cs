@@ -26,21 +26,21 @@ namespace LanguageCourse.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
         {
-            var students = await _service.GetAllStudents();
+            var students = await _service.GetAllStudentsAsync();
             return Ok(students);
         }
 
         [HttpPost]
         public async Task<IActionResult> CraeteStudent([FromBody] CreateStudentDTO dto)
         {
-            var student = await _service.CreateStudent(dto.Name, dto.Genre, dto.CPF, dto.Email, dto.ClassIds);
+            var student = await _service.CreateStudentAsync(dto.Name, dto.Genre, dto.CPF, dto.Email, dto.ClassIds);
             return Ok(student);
         }
 
         [HttpPost("{id:guid}/enrollments")]
         public async Task<IActionResult> AddEnrollmentToStudent([FromRoute] Guid id, [FromBody] AddEnrollmentDTO dto)
         {
-            await _service.AddEnrollmentToStudent(id, dto.ClassId);
+            await _service.AddEnrollmentToStudentAsync(id, dto.ClassId);
             return Ok();
         }
 

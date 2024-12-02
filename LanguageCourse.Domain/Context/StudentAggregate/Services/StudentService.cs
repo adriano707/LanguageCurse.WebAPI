@@ -22,15 +22,23 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Services
             return student;
         }
 
-        public async Task<List<Student>> GetAllStudents()
+        public async Task<List<Student>> GetAllStudentsAsync()
         {
-            var students = _repository.Query<Student>().ToList();
+            var students = await _repository.Query<Student>()
+                .Include(s => s.Enrollments) 
+                .ToListAsync();
             return students;
         }
 
-        public async Task<Student> CreateStudent(string name, GenreEnum genre, string cpf, string email, List<Guid> classIds)
+
+        public async Task<Student> CreateStudentAsync(string name, GenreEnum genre, string cpf, string email, List<Guid> classIds)
         {
             Student student = new Student(name, genre, cpf, email);
+
+            if (classIds == null || !classIds.Any())
+            {
+                throw new YouMustInformOneOrMoreClassesException();
+            }
 
             if (await _repository.Query<Student>().AnyAsync(s => s.CPF == cpf))
                 throw new AlreadyRegisteredStudentException(cpf);
@@ -72,7 +80,7 @@ namespace LanguageCourse.Domain.Context.StudentAggregate.Services
             if (numbeOfEnrollmentsPerCass >= 5) throw new MaximumNumberOfStudentsPerClassExceededException();
         }
 
-        public async Task AddEnrollmentToStudent(Guid studentId, Guid classId)
+        public async Task AddEnrollmentToStudentAsync(Guid studentId, Guid classId)
         {
             await CheckIfTheNumberOfStudentsPerClassHasBeenExceededAndCheckIfTheStudentIsAlreadyEnrolledInTheClass(studentId, classId);
 

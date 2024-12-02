@@ -22,10 +22,13 @@ namespace LanguageCourse.Domain.Context.ClassAggregate.Services
 
         public async Task<List<Class>> GetAllSClassesAsync()
         {
-            var classStudent = await _repository.Query<Class>().ToListAsync();
+            var classStudent = await _repository.Query<Class>()
+                .Include(c => c.Enrollments)  
+                .ToListAsync();
 
             return classStudent;
         }
+
 
         public async Task<Class> CreateClassAsync(string name, string description)
         {
