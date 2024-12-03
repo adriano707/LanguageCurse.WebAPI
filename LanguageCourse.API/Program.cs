@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using FluentValidation;
+using LanguageCourse.API.DTOs;
+using LanguageCourse.API.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +26,9 @@ builder.Services.AddTransient<IEnrollmentService, EnrollmentService>();
 builder.Services.AddTransient<IStudentService, StudentService>();
 
 builder.Services.AddTransient<IRepository, Repository>();
+
+builder.Services.AddTransient<IValidator<CreateStudentDTO>, CreateStudentValidation>();
+builder.Services.AddTransient<IValidator<CreateClasstDTO>, CreateClassValidation>();
 
 builder.Services.AddVersionedSwagger();
 

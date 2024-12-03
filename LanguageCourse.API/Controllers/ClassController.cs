@@ -1,4 +1,5 @@
-﻿using LanguageCourse.API.DTOs;
+﻿using FluentValidation;
+using LanguageCourse.API.DTOs;
 using LanguageCourse.Domain.Context.ClassAggregate.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace LanguageCourse.API.Controllers
     public class ClassController : ControllerBase
     {
         private readonly IClassService _service;
+        private readonly IValidator<CreateClasstDTO> _validator;
 
-        public ClassController(IClassService service)
+        public ClassController(IClassService service, IValidator<CreateClasstDTO> validator)
         {
             _service = service;
+            _validator = validator;
         }
 
         [HttpGet("{id:guid}")]
@@ -33,8 +36,15 @@ namespace LanguageCourse.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateClass([FromBody] CreateClasstDTO dto)
         {
-            var classe = await _service.CreateClassAsync(dto.Name, dto.Description);
-            return Ok(classe);
+            var validateResult = _validator.Validate(dto);
+
+            if (validateResult.IsValid)
+            {
+                var classe = await _service.CreateClassAsync(dto.Name, dto.Description);
+                return Ok(classe);
+            }
+            
+            return Conflict(validateResult.Errors);
         }
 
         [HttpPut]

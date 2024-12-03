@@ -10,7 +10,7 @@ namespace LanguageCourse.Data.Configurations.StudentConfiguration
         {
             builder.HasKey(s => s.Id);
             builder.Property(s => s.Name).HasColumnType("varchar(250)");
-            builder.Property(s => s.CPF).HasColumnType("varchar(11)");
+            builder.Property(s => s.CPF).HasColumnType("varchar(14)");
             builder.Property(s => s.Email).HasColumnType("varchar(250)");
             builder.Property(s => s.Genre).HasConversion<int>().IsRequired();
 

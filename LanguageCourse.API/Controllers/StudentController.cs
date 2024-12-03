@@ -1,4 +1,5 @@
-﻿using LanguageCourse.API.DTOs;
+﻿using FluentValidation;
+using LanguageCourse.API.DTOs;
 using LanguageCourse.Domain.Context.StudentAggregate.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace LanguageCourse.API.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _service;
+        private readonly IValidator<CreateStudentDTO> _validator;
 
-        public StudentController(IStudentService service)
+        public StudentController(IStudentService service, IValidator<CreateStudentDTO> validator)
         {
             _service = service;
+            _validator = validator;
         }
 
         [HttpGet("{id:guid}")]
@@ -33,8 +36,15 @@ namespace LanguageCourse.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CraeteStudent([FromBody] CreateStudentDTO dto)
         {
-            var student = await _service.CreateStudentAsync(dto.Name, dto.Genre, dto.CPF, dto.Email, dto.ClassIds);
-            return Ok(student);
+            var validateResult = _validator.Validate(dto);
+
+            if (validateResult.IsValid)
+            {
+                var student = await _service.CreateStudentAsync(dto.Name, dto.Genre, dto.CPF, dto.Email, dto.ClassIds);
+                return Ok(student);
+            }
+
+            return Conflict(validateResult.Errors);
         }
 
         [HttpPost("{id:guid}/enrollments")]
